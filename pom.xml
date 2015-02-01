@@ -5,9 +5,9 @@
   <artifactId>register-app</artifactId>
   <name>register-app</name>
   <version>1.1.1-SNAPSHOT</version>
-  <url>http://dddsample.sf.net</url>
+  <url>https://github.com/citerus/dddsample-regapp</url>
   <scm>
-    <developerConnection>scm:svn:https://dddsample.svn.sourceforge.net/svnroot/dddsample</developerConnection>
+    <developerConnection>scm:git:https://github.com/citerus/dddsample-regapp</developerConnection>
   </scm>
   <build>
     <plugins>
