@@ -11,6 +11,7 @@
         <developerConnection>scm:git:https://github.com/citerus/dddsample-regapp</developerConnection>
     </scm>
     <build>
+        <finalName>register-app</finalName>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
