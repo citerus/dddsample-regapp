@@ -4,11 +4,13 @@ package se.citerus;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportResource;
 import se.citerus.registerapp.RegisterApp;
+import se.citerus.registerapp.RegisterAppConfiguration;
 
 @SpringBootApplication
-@ImportResource("context-app.xml")
+@Import(RegisterAppConfiguration.class)
 public class App {
 
     public static void main(String[] args) {
