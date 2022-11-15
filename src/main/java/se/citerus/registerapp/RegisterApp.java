@@ -1,13 +1,11 @@
 package se.citerus.registerapp;
 
-import com.aggregator.HandlingReport;
-import com.aggregator.HandlingReportErrors_Exception;
-import com.aggregator.HandlingReportService;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.debug.FormDebugPanel;
 import com.jgoodies.forms.factories.ButtonBarFactory;
 import com.jgoodies.forms.layout.FormLayout;
-import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
+import se.citerus.registerapp.service.HandlingReport;
+import se.citerus.registerapp.service.HandlingReportService;
 import se.citerus.registerapp.validation.FormValidationDecorator;
 import se.citerus.registerapp.validation.FormValidationSwingDecorator;
 import se.citerus.registerapp.validation.MandatoryTextFieldValidator;
@@ -23,7 +21,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 public class RegisterApp {
   private static final DefaultFormatter DEFAULT_FORMATTER = new DefaultFormatter();
@@ -38,33 +35,34 @@ public class RegisterApp {
   private JComboBox eventTypeField;
   private JButton registerButton;
 
-  private HandlingReportService handlingReportService;
-  private boolean debugUI;
+  private final HandlingReportService handlingReportService;
+  private final boolean debugUI;
   private FormValidationDecorator validator;
 
+  public RegisterApp(HandlingReportService handlingReportService, boolean debugUI) {
+    this.handlingReportService = handlingReportService;
+    this.debugUI = debugUI;
+  }
 
-    /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
   // GUI EVENT HANDLING
   /////////////////////////////////////////////////////////////////////////////
-  protected void onRegister(){
+  protected void onRegister() {
     assert handlingReportService != null : "No HandlingEventService available";
 
-        try {
-            final HandlingReport report = new HandlingReport();
-            final GregorianCalendar completionTime = new GregorianCalendar();
-            completionTime.setTime((Date) completionTimeField.getValue());
-            report.setCompletionTime(new XMLGregorianCalendarImpl(completionTime));
-            report.getTrackingIds().add(getStringValue(trackingIdField));
-            report.setType(getStringValue(eventTypeField).toUpperCase());
-            report.setUnLocode(getStringValue(locationField));
-            report.setVoyageNumber(getStringValue(carrierMovementField));
-
-            handlingReportService.submitReport(report);
-            clearForm();
-        } catch (HandlingReportErrors_Exception e) {
-            e.printStackTrace();
-        }
+    try {
+      Date completionTime = (Date) completionTimeField.getValue();
+      String trackingId = getStringValue(trackingIdField);
+      String eventType = getStringValue(eventTypeField).toUpperCase();
+      String unloCode = getStringValue(locationField);
+      String voyageNumber = getStringValue(carrierMovementField);
+      final HandlingReport report = new HandlingReport(completionTime, trackingId, eventType, unloCode, voyageNumber);
+      handlingReportService.submitReport(report);
+      clearForm();
+    } catch (Exception e) {
+      e.printStackTrace();
     }
+  }
 
   private String getStringValue(JComboBox comboBox) {
       Object value = comboBox.getSelectedItem();
@@ -111,15 +109,6 @@ public class RegisterApp {
     frame.setVisible(true);
 
     clearForm();
-  }
-
-
-  public void setHandlingReportService(HandlingReportService handlingReportService) {
-    this.handlingReportService = handlingReportService;
-  }
-
-  public void setDebugUI(boolean on){
-    this.debugUI = on;
   }
 
   /////////////////////////////////////////////////////////////////////////////
